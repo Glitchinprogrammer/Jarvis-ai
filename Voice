@@ -1,0 +1,36 @@
+import speech_recognition as sr
+import pyttsx3
+
+# Initialize the text-to-speech engine
+engine = pyttsx3.init()
+
+# Define a function to listen for voice commands
+def listen():
+    r = sr.Recognizer()
+    with sr.Microphone() as source:
+        print("Listening...")
+        audio = r.listen(source)
+
+    try:
+        command = r.recognize_google(audio)
+        print(f"You said: {command}")
+        return command
+    except sr.UnknownValueError:
+        print("Could not understand audio")
+        return ""
+
+# Define a function to respond to voice commands
+def respond(command):
+    if "hello" in command:
+        engine.say("Hello, how can I help you?")
+    elif "what is the time" in command:
+        engine.say("The time is " + datetime.datetime.now().strftime("%H:%M"))
+    else:
+        engine.say("I don't understand")
+
+    engine.runAndWait()
+
+# Main loop
+while True:
+    command = listen()
+    respond(command)
