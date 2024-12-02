@@ -1,36 +1,30 @@
-import speech_recognition as sr
-import pyttsx3
+// Speech Recognition API
+const SpeechRecognition = window.SpeechRecognition || window.webkitSpeechRecognition;
+const recognition = new SpeechRecognition();
 
-# Initialize the text-to-speech engine
-engine = pyttsx3.init()
+// Text-to-Speech API
+const synth = window.speechSynthesis;
 
-# Define a function to listen for voice commands
-def listen():
-    r = sr.Recognizer()
-    with sr.Microphone() as source:
-        print("Listening...")
-        audio = r.listen(source)
+// Event listener for speech recognition
+recognition.onresult = (event) => {
+    const transcript = event.results[0][0].transcript;
+    document.getElementById('output').textContent = transcript;
 
-    try:
-        command = r.recognize_google(audio)
-        print(f"You said: {command}")
-        return command
-    except sr.UnknownValueError:
-        print("Could not understand audio")
-        return ""
+    // Process the transcript (e.g., call APIs, perform actions)
+    if (transcript.includes('hello')) {
+        speak('Hello, how can I help you?');
+    } else if (transcript.includes('search')) {
+        // Implement search functionality (e.g., using Google Search API)
+    } else {
+        speak('I\'m not sure what you mean. Can you please rephrase your question?');
+    }
+};
 
-# Define a function to respond to voice commands
-def respond(command):
-    if "hello" in command:
-        engine.say("Hello, how can I help you?")
-    elif "what is the time" in command:
-        engine.say("The time is " + datetime.datetime.now().strftime("%H:%M"))
-    else:
-        engine.say("I don't understand")
+// Function to speak text
+function speak(text) {
+    const utterance = new SpeechSynthesisUtterance(text);
+    synth.speak(utterance);
+}
 
-    engine.runAndWait()
-
-# Main loop
-while True:
-    command = listen()
-    respond(command)
+// Start listening
+recognition.start();
